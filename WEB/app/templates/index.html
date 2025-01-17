@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reconocimiento de Vocales</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script defer src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+</head>
+<body>
+    <!-- Cabecera -->
+    <header class="header">
+        <div class="menu">
+            <div class="logo">Mi Proyecto</div>
+            <input type="checkbox" id="menu">
+            <label for="menu"><img src="{{ url_for('static', filename='images/menu.png') }}" class="menu-icon" alt="Menu"></label>
+            <nav class="navbar">
+                <ul>
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#funcionalidad">Funcionalidad</a></li>
+                    <li><a href="#reconocimiento">Reconocimiento</a></li>
+                    <li><a href="#videos">Videos Tutoriales</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="header-txt">
+            <h1>Reconocimiento de Vocales</h1>
+            <p>Utilizando Inteligencia Artificial para superar barreras sociales.</p>
+            <a href="#reconocimiento" class="btn-1">Probar Ahora</a>
+        </div>
+    </header>
+
+    <!-- Sección Reconocimiento -->
+    <section id="reconocimiento" class="info-1">
+        <h2>Prueba el Reconocimiento</h2>
+        <p>Activa tu cámara y realiza una seña con las vocales.</p>
+        <div class="camera-container">
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas" style="display: none;"></canvas>
+            <div id="output">
+                <p>Letra Detectada: <span id="letter">N/A</span></p>
+            </div>
+            <button id="start-camera" class="btn-1">Iniciar Cámara</button>
+            <button id="capture" class="btn-1">Capturar Imagen</button>
+        </div>
+    </section>
+
+    <!-- Nueva Sección: Videos Tutoriales -->
+    <section id="videos" class="info-2">
+        <h2>Videos Tutoriales</h2>
+        <p>Aprende a realizar las vocales en lenguaje de señas con estos videos.</p>
+        <ul id="videoList"></ul>
+    </section>
+
+    <!-- Sección Contacto -->
+    <footer id="contacto" class="footer">
+        <h2>Contacto</h2>
+        <form class="form" method="POST" action="#contacto">
+            <input type="text" name="nombre" class="campo" placeholder="Nombre">
+            <input type="email" name="email" class="campo" placeholder="Correo Electrónico">
+            <textarea name="mensaje" class="campo" placeholder="Mensaje"></textarea>
+            <button type="submit" class="btn-2">Enviar</button>
+        </form>
+        <p>&copy; 2024 Mi Proyecto. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const letterOutput = document.getElementById('letter');
+        const startCameraButton = document.getElementById('start-camera');
+        const captureButton = document.getElementById('capture');
+
+        // Activar la cámara
+        startCameraButton.addEventListener('click', () => {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    video.srcObject = stream;
+                })
+                .catch(err => {
+                    console.error("No se pudo acceder a la cámara", err);
+                });
+        });
+
+        // Capturar imagen y enviarla al backend
+        captureButton.addEventListener('click', async () => {
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Convertir imagen a blob
+            canvas.toBlob(async (blob) => {
+                const formData = new FormData();
+                formData.append('image', blob, 'captured_image.jpg');
+
+                // Enviar la imagen al backend
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                // Obtener el resultado
+                const data = await response.json();
+                letterOutput.textContent = data.letra_detectada || 'No se detectó ninguna letra';
+            }, 'image/jpeg');
+        });
+
+        // Cargar y mostrar videos en la sección Videos Tutoriales
+        async function loadVideos() {
+            try {
+                const response = await fetch('/api/videos');
+                const videos = await response.json();
+
+                // Manejar errores del servidor
+                if (videos.error) {
+                    alert(videos.error);
+                    return;
+                }
+
+                const videoList = document.getElementById('videoList');
+                videoList.innerHTML = ''; // Limpiar la lista antes de cargar
+
+                // Crear una entrada para cada video
+                videos.forEach(video => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <video width="320" height="240" controls>
+                            <source src="/static/videos/${video}" type="video/mp4">
+                            Tu navegador no soporta el elemento de video.
+                        </video>
+                        <p>${video}</p>
+                    `;
+                    videoList.appendChild(li);
+                });
+            } catch (error) {
+                alert('Error al cargar los videos: ' + error.message);
+            }
+        }
+
+        // Cargar los videos al cargar la página
+        loadVideos();
+    </script>
+</body>
+</html>

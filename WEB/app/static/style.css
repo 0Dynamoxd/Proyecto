@@ -1,0 +1,164 @@
+/* Importación de fuentes */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* Reset general */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Cuerpo */
+body {
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Cabecera */
+.header {
+    background: url('../static/images/bg.png') no-repeat center/cover;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.header h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.header p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn-1 {
+    display: inline-block;
+    padding: 10px 30px;
+    border: 2px solid white;
+    background: transparent;
+    color: white;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-1:hover {
+    background: white;
+    color: #333;
+}
+
+/* Navegación */
+.menu {
+    position: absolute;
+    top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    color: white;
+}
+
+.navbar ul {
+    display: flex;
+    list-style: none;
+}
+
+.navbar li {
+    margin: 0 10px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+/* General Section */
+.general {
+    padding: 50px 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+.general h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.general-content {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.general-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+/* Reconocimiento Section */
+.info-1 {
+    padding: 50px 20px;
+    background: #1b293a;
+    color: white;
+    text-align: center;
+}
+
+.camera-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+video, canvas {
+    border: 2px solid white;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+/* Footer */
+.footer {
+    padding: 30px 20px;
+    background: #333;
+    color: white;
+    text-align: center;
+}
+
+.form {
+    margin: 20px 0;
+}
+
+.campo {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.btn-2 {
+    padding: 10px 30px;
+    background: #1b293a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-2:hover {
+    background: white;
+    color: #1b293a;
+}
